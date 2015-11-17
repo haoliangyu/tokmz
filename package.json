@@ -25,10 +25,11 @@
   "homepage": "https://github.com/haoliangyu/tokmz#readme",
   "dependencies": {
     "elementtree": "^0.1.6",
-    "jszip": "^2.5.0",
-    "tokml": "^0.3.0"
+    "gtran-kml": "^1.0.0",
+    "jszip": "^2.5.0"
   },
   "devDependencies": {
+    "bluebird": "^3.0.5",
     "chai": "^3.4.1",
     "log4js": "^0.6.27",
     "mocha": "^2.3.3"
