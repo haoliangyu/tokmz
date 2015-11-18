@@ -6,12 +6,12 @@ var JSZip = require('jszip');
 var promiseLib = require('./promise.js');
 var fs = require('fs');
 
-module.export = function(layers, fileName, promiseLib) {
-    var Promise = promiseLib.set(promiseLib);
+module.exports = function(layers, fileName, options) {
+    var Promise = promiseLib.set(options.promiseLib);
     var taskList = [];
-    generateTaskList('doc/', layers, taskList);
+    generateTaskList('doc', layers, taskList);
 
-    Promise.all(taskList)
+    return Promise.all(taskList)
     .then(function(results) {
         var zip = JSZip();
 
@@ -20,34 +20,39 @@ module.export = function(layers, fileName, promiseLib) {
 
         var doc = et.SubElement(root, 'Document');
 
-        results.forEach(function(result) { =
+        results.forEach(function(result) {
             var fullPath = result.directory + '/' + result.fileName + '.kml';
 
             zip.file(fullPath, result.data);
 
-            var folderNode = getFolder(root, result.directory);
+            var folderNode = getFolder(doc, result.directory.substring(4));
             if(!folderNode) {
-                folderNode = createFolder(root, result.directory);
+                folderNode = createFolder(doc, result.directory.substring(4));
             }
 
             var networkLink = et.SubElement(folderNode, 'NetworkLink');
 
             var name = et.SubElement(networkLink, 'name');
-            name.text = result.name;
+            name.text = result.fileName;
 
             var link = et.SubElement(networkLink, 'Link');
             var href = et.SubElement(link, 'href');
             href.text = fullPath;
         });
 
-        return Promise.resolve(zip);
+        var xmlTree = new et.ElementTree(root);
+
+        zip.file('doc.kml', xmlTree.write());
+        var buffer = zip.generate({type:"nodebuffer"});
+
+        return Promise.resolve(buffer);
     })
     .then(function(zip) {
         if(fileName) {
-            fs.writeFile(fileName, data, function(err) {
+            fs.writeFile(fileName, zip, function(err) {
                 if(err) { return Promise.reject(err); }
 
-                return Promise.resolve(fileName)
+                return Promise.resolve(fileName);
             });
         } else {
             return Promise.resolve(zip);
@@ -56,33 +61,35 @@ module.export = function(layers, fileName, promiseLib) {
 };
 
 function generateTaskList(filePath, layers, taskList) {
-    layers.forEach(layers, function(item) {
+    layers.forEach(function(item) {
         if(item.type === 'layer') {
-            var task = kml.fromGeoJson(item.features, {
+            var task = kml.fromGeoJson(item.features, null, {
                 symbol: item.symbol
             })
             .then(function(result) {
                 return Promise.resolve({
                     directory: filePath,
-                    fileName: layer.name,
+                    fileName: item.name,
                     data: result.data
                 });
             });
 
             taskList.push(task);
         } else {
-            generateTaskList(filePath + '/' + item.name, item.children, taskList);
+            generateTaskList(filePath + '/' + item.name, item.content, taskList);
         }
     });
 }
 
-function getFolder(root, path) {
+function getFolder(node, path) {
+    if(!path) { return node; }
+
     var xpath = '.';
     path.split('/').forEach(function(folder) {
-        xpath += "/Folder[@name='" + folder + "']";
+        xpath += "Folder[@name='" + folder + "']";
     });
 
-    return root.find(xpath);
+    return node.find(xpath);
 }
 
 function createFolder(root, path) {
@@ -92,12 +99,12 @@ function createFolder(root, path) {
     for(var i = 0, maxLen = folders.length; i < maxLen; i++) {
         var matchNode = node.find("./Folder[@name='" + folders[i] + "']");
 
-        if(!matchNodes) {
+        if(!matchNode) {
             matchNode = et.SubElement(node, 'Folder');
-            matchNode.attri.name = folder[i];
+            matchNode.attrib.name = folders[i];
 
-            var name = et.SubElement(matchNodes, 'name');
-            name.text = folder[i];
+            var name = et.SubElement(matchNode, 'name');
+            name.text = folders[i];
         }
 
         node = matchNode;
