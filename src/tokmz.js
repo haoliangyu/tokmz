@@ -7,7 +7,10 @@ var promiseLib = require('./promise.js');
 var fs = require('fs');
 
 module.exports = function(layers, fileName, options) {
-    var Promise = promiseLib.set(options.promiseLib);
+    if(options) {
+        var Promise = promiseLib.set(options.promiseLib);
+    }
+
     var taskList = [];
     generateTaskList('doc', layers, taskList);
 
