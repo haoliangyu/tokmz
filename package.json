@@ -1,6 +1,6 @@
 {
   "name": "tokmz",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Convert GeoJsons into KMZ file with layer structure.",
   "main": "src/tokmz.js",
   "directories": {
