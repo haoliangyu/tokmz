@@ -6,10 +6,15 @@ var JSZip = require('jszip');
 var promiseLib = require('./promise.js');
 var fs = require('fs');
 
+var Promise;
+
 module.exports = function(layers, fileName, options) {
     if(options) {
-        var Promise = promiseLib.set(options.promiseLib);
+        Promise = promiseLib.set(options.promiseLib);
         kml.setPromiseLib(options.promiseLib);
+    } else {
+        Promise = promiseLib.set();
+        kml.setPromiseLib();
     }
 
     var taskList = [];
