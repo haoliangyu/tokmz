@@ -9,6 +9,7 @@ var fs = require('fs');
 module.exports = function(layers, fileName, options) {
     if(options) {
         var Promise = promiseLib.set(options.promiseLib);
+        kml.setPromiseLib(options.promiseLib);
     }
 
     var taskList = [];
