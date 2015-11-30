@@ -47,7 +47,7 @@ tokmz() accepts GeoJsons organized using two elements:
     features: geojson_object,
     options: {
         symbol: feature_symbol,
-        name: feature_name_attribute
+        name: feature_name_attribute // in geojson.properties
     }
 }
 ```
