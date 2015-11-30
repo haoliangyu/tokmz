@@ -17,7 +17,7 @@ describe('Testing tokmz()', function() {
             'geometry': {"type":"Point","coordinates":[-70.2532459795475,43.6399758607149]},
             'properties': {
               'id': 1,
-              'name': 'test'
+              'Name': 'test'
             }
         }]
     };
@@ -39,7 +39,7 @@ describe('Testing tokmz()', function() {
                                                           [-70.2,43.6]]]},
             'properties': {
               'id': 1,
-              'name': 'test'
+              'Name': 'test'
             }
         }]
     };
@@ -57,7 +57,7 @@ describe('Testing tokmz()', function() {
             'geometry': {"type":"LineString","coordinates":[[-70.2,43.6], [-74.2,40.6]]},
             'properties': {
               'id': 1,
-              'name': 'test'
+              'Name': 'test'
             }
         }]
     };
@@ -69,10 +69,10 @@ describe('Testing tokmz()', function() {
 
     var layers = [
         { type: 'folder', name: 'test', content: [
-            { type: 'layer', name: 'polygon_layer', features: polygonJson, symbol: polygonSymbol }
+            { type: 'layer', name: 'polygon_layer', features: polygonJson, options: {symbol: polygonSymbol, name: 'Name'} }
         ] },
-        { type: 'layer', name: 'point_layer', features: pointJson, symbol: pointSymbol },
-        { type: 'layer', name: 'polyline_layer', features: polylineJson, symbol: polylineSymbol }
+        { type: 'layer', name: 'point_layer', features: pointJson, options: { symbol: pointSymbol, name: 'Name' } },
+        { type: 'layer', name: 'polyline_layer', features: polylineJson, options: { symbol: polylineSymbol, name: 'Name'} }
     ];
 
     it('should save the object array as a KML file with Q.', function() {

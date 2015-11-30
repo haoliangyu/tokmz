@@ -45,7 +45,10 @@ tokmz() accepts GeoJsons organized using two elements:
     type: 'layer',
     name: 'name_of_layer',
     features: geojson_object,
-    symbol: feature_symbol
+    options: {
+        symbol: feature_symbol,
+        name: feature_name_attribute
+    }
 }
 ```
 
@@ -62,10 +65,10 @@ var polygonJson, polygonSymbol, pointJson, pointSymbol, polylineJson, polylineSy
 
 var layers = [
     { type: 'folder', name: 'test', content: [
-        { type: 'layer', name: 'polygon_layer', features: polygonJson, symbol: polygonSymbol }
+        { type: 'layer', name: 'polygon_layer', features: polygonJson, options: {symbol: polygonSymbol, name: 'Name'} }
     ] },
-    { type: 'layer', name: 'point_layer', features: pointJson, symbol: pointSymbol },
-    { type: 'layer', name: 'polyline_layer', features: polylineJson, symbol: polylineSymbol }
+    { type: 'layer', name: 'point_layer', features: pointJson, options: { symbol: pointSymbol, name: 'Name' } },
+    { type: 'layer', name: 'polyline_layer', features: polylineJson, options: { symbol: polylineSymbol, name: 'Name'} }
 ];
 
 tokmz(layers, 'test.kmz', {

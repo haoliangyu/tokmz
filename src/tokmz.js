@@ -71,9 +71,17 @@ module.exports = function(layers, fileName, options) {
 
 function generateTaskList(filePath, layers, taskList) {
     layers.forEach(function(item) {
+        var layerSymbol, featureName;
+
+        if (item.options) {
+            layerSymbol = item.options.symbol;
+            featureName = item.options.name;
+        }
+
         if(item.type === 'layer') {
             var task = kml.fromGeoJson(item.features, null, {
-                symbol: item.symbol
+                symbol: layerSymbol,
+                name: featureName
             })
             .then(function(result) {
                 return Promise.resolve({
