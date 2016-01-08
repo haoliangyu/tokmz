@@ -52,7 +52,7 @@ tokmz() accepts GeoJsons organized using two elements:
 }
 ```
 
-Detail about defining feature symbol can be found at [**tran-kml**](https://github.com/haoliangyu/gtran-kml).
+Detail about defining feature symbol can be found at [**gtran-kml**](https://github.com/haoliangyu/gtran-kml).
 
 ## Sample
 
