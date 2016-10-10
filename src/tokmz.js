@@ -52,19 +52,17 @@ module.exports = function(layers, fileName, options) {
         var xmlTree = new et.ElementTree(root);
 
         zip.file('doc.kml', xmlTree.write());
-        var buffer = zip.generate({type:"nodebuffer"});
-
-        return Promise.resolve(buffer);
+        return zip.generateAsync({type:"nodebuffer"});
     })
     .then(function(zip) {
         if(fileName) {
-            fs.writeFile(fileName, zip, function(err) {
-                if(err) { return Promise.reject(err); }
-
-                return Promise.resolve(fileName);
-            });
+            var writeFileAsync = promiseLib.promisify(fs.writeFile);
+            return writeFileAsync(fileName, zip)
+                .then(function() {
+                    return fileName;
+                });
         } else {
-            return Promise.resolve(zip);
+            return zip;
         }
     });
 };

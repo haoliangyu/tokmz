@@ -4,11 +4,15 @@ var logger = require('log4js').getLogger();
 var bluebird = require('bluebird');
 
 var chai = require('chai');
+var chaiAsPromised = require("chai-as-promised");
+
+chai.use(chaiAsPromised);
+
 var expect = chai.expect;
 
 describe('Testing tokmz()', function() {
 
-    var fileName = 'test/result/test.kmz';
+    var fileName = './test/result/test.kmz';
 
     var pointJson = {
         'type': 'FeatureCollection',
@@ -75,12 +79,12 @@ describe('Testing tokmz()', function() {
         { type: 'layer', name: 'polyline_layer', features: polylineJson, options: { symbol: polylineSymbol, name: 'Name'} }
     ];
 
-    it('should save the object array as a KML file with Q.', function() {
-        tokmz(layers, fileName, {
-          promiseLib: bluebird
+    it('should save the object array as a KML file with bluebird.', function() {
+        return tokmz(layers, fileName, {
+            promiseLib: bluebird
         })
         .then(function(file) {
-            expect(fs.statSync(fileName)).to.exist;
+            expect(fs.statSync(file)).to.exist;
         })
         .catch(function(err) {
             logger.error(err);
